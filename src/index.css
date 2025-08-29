@@ -8,35 +8,58 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Modern Kanban color palette */
+    --background: 216 30% 97%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 84% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 215 25% 35%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 94%;
+    --muted-foreground: 215 16% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 142 76% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 31% 88%;
+    --input: 214 31% 88%;
+    --ring: 220 84% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Kanban specific colors */
+    --board-bg: 216 30% 97%;
+    --column-bg: 215 20% 92%;
+    --column-header: 215 30% 85%;
+    --card-shadow: 215 25% 15%;
+    --success: 142 76% 50%;
+    --warning: 38 92% 50%;
+    --info: 199 95% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 84% 55%), hsl(220 84% 65%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    
+    /* Shadows */
+    --shadow-card: 0 2px 8px -2px hsl(var(--card-shadow) / 0.1);
+    --shadow-card-hover: 0 4px 16px -4px hsl(var(--card-shadow) / 0.15);
+    --shadow-column: 0 1px 3px hsl(var(--card-shadow) / 0.08);
+
+    /* Animations */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +79,43 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 215 28% 8%;
+    --foreground: 210 40% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 215 28% 12%;
+    --card-foreground: 210 40% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 215 28% 12%;
+    --popover-foreground: 210 40% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 220 84% 65%;
+    --primary-foreground: 215 28% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 28% 16%;
+    --secondary-foreground: 210 40% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 28% 16%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 142 76% 50%;
+    --accent-foreground: 215 28% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 40% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 215 28% 20%;
+    --input: 215 28% 20%;
+    --ring: 220 84% 65%;
+
+    /* Dark mode specific */
+    --board-bg: 215 28% 8%;
+    --column-bg: 215 28% 12%;
+    --column-header: 215 28% 16%;
+    --card-shadow: 0 0% 0%;
+    
+    --shadow-card: 0 2px 8px -2px hsl(var(--card-shadow) / 0.3);
+    --shadow-card-hover: 0 4px 16px -4px hsl(var(--card-shadow) / 0.4);
+    --shadow-column: 0 1px 3px hsl(var(--card-shadow) / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +133,50 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-board-bg text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Kanban Board Styles */
+  .kanban-card {
+    @apply bg-card border border-border rounded-lg shadow-card hover:shadow-card-hover;
+    @apply transition-all duration-200 cursor-pointer;
+    background: var(--gradient-card);
+  }
+
+  .kanban-column {
+    @apply bg-column-bg border border-border rounded-xl shadow-column;
+    @apply transition-all duration-200;
+  }
+
+  .kanban-column-header {
+    @apply bg-column-header border-b border-border rounded-t-xl;
+  }
+
+  .add-card-btn {
+    @apply bg-accent hover:bg-accent/90 text-accent-foreground;
+    @apply transition-all duration-200 transform hover:scale-105;
+  }
+
+  .drag-overlay {
+    @apply rotate-3 scale-105 shadow-card-hover;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground;
   }
 }
