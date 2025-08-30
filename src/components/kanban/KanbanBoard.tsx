@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import {
   DndContext,
   DragEndEvent,
@@ -25,6 +27,7 @@ export function KanbanBoard({ board, onUpdateBoard }: KanbanBoardProps) {
   const [activeCard, setActiveCard] = useState<Card | null>(null);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -133,51 +136,115 @@ export function KanbanBoard({ board, onUpdateBoard }: KanbanBoardProps) {
     setIsModalOpen(true);
   };
 
-  const handleUpdateCard = (updatedCard: Card) => {
-    const newBoard = { ...board };
-    const column = newBoard.columns.find(col => col.id === updatedCard.columnId);
-    
-    if (column) {
-      const cardIndex = column.cards.findIndex(c => c.id === updatedCard.id);
-      if (cardIndex !== -1) {
-        column.cards[cardIndex] = updatedCard;
+  const handleUpdateCard = async (updatedCard: Card) => {
+    try {
+      // Update in database
+      const { error } = await supabase
+        .from('cards')
+        .update({
+          title: updatedCard.title,
+          description: updatedCard.description,
+          due_date: updatedCard.dueDate || null,
+          position: updatedCard.order,
+        })
+        .eq('id', updatedCard.id);
+
+      if (error) throw error;
+
+      // Update local state
+      const newBoard = { ...board };
+      const column = newBoard.columns.find(col => col.id === updatedCard.columnId);
+      
+      if (column) {
+        const cardIndex = column.cards.findIndex(c => c.id === updatedCard.id);
+        if (cardIndex !== -1) {
+          column.cards[cardIndex] = updatedCard;
+          onUpdateBoard(newBoard);
+        }
+      }
+      
+      setIsModalOpen(false);
+      setSelectedCard(null);
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update card',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteCard = async (cardId: string, columnId: string) => {
+    try {
+      // Delete from database
+      const { error } = await supabase
+        .from('cards')
+        .delete()
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      // Remove from local state
+      const newBoard = { ...board };
+      const column = newBoard.columns.find(col => col.id === columnId);
+      
+      if (column) {
+        column.cards = column.cards.filter(c => c.id !== cardId);
         onUpdateBoard(newBoard);
       }
+      
+      setIsModalOpen(false);
+      setSelectedCard(null);
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete card',
+        variant: 'destructive',
+      });
     }
-    
-    setIsModalOpen(false);
-    setSelectedCard(null);
   };
 
-  const handleDeleteCard = (cardId: string, columnId: string) => {
-    const newBoard = { ...board };
-    const column = newBoard.columns.find(col => col.id === columnId);
-    
-    if (column) {
-      column.cards = column.cards.filter(c => c.id !== cardId);
-      onUpdateBoard(newBoard);
-    }
-    
-    setIsModalOpen(false);
-    setSelectedCard(null);
-  };
+  const handleAddCard = async (columnId: string, title: string) => {
+    try {
+      // Create card in database first
+      const { data: newCard, error } = await supabase
+        .from('cards')
+        .insert({
+          title,
+          list_id: columnId,
+          position: 0,
+        })
+        .select()
+        .single();
 
-  const handleAddCard = (columnId: string, title: string) => {
-    const newCard: Card = {
-      id: `card-${Date.now()}`,
-      title,
-      columnId,
-      assignees: [],
-      order: 0,
-      createdAt: new Date().toISOString()
-    };
-    
-    const newBoard = { ...board };
-    const column = newBoard.columns.find(col => col.id === columnId);
-    
-    if (column) {
-      column.cards.push(newCard);
-      onUpdateBoard(newBoard);
+      if (error) throw error;
+
+      // Transform database card to local card format
+      const localCard: Card = {
+        id: newCard.id,
+        title: newCard.title,
+        description: newCard.description || '',
+        dueDate: newCard.due_date || '',
+        assignees: [],
+        columnId: newCard.list_id,
+        order: newCard.position,
+        createdAt: newCard.created_at,
+      };
+
+      // Add to local state
+      const newBoard = { ...board };
+      const column = newBoard.columns.find(col => col.id === columnId);
+      
+      if (column) {
+        column.cards.push(localCard);
+        onUpdateBoard(newBoard);
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: 'Failed to create card',
+        variant: 'destructive',
+      });
     }
   };
 

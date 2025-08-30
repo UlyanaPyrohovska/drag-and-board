@@ -10,12 +10,13 @@ import { Plus, MoreHorizontal } from 'lucide-react';
 interface KanbanColumnProps {
   column: Column;
   onCardClick: (card: Card) => void;
-  onAddCard: (columnId: string, title: string) => void;
+  onAddCard: (columnId: string, title: string) => Promise<void>;
 }
 
 export function KanbanColumn({ column, onCardClick, onAddCard }: KanbanColumnProps) {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
 
   const { setNodeRef } = useDroppable({
     id: column.id,
@@ -25,11 +26,16 @@ export function KanbanColumn({ column, onCardClick, onAddCard }: KanbanColumnPro
     },
   });
 
-  const handleAddCard = () => {
-    if (newCardTitle.trim()) {
-      onAddCard(column.id, newCardTitle.trim());
-      setNewCardTitle('');
-      setIsAddingCard(false);
+  const handleAddCard = async () => {
+    if (newCardTitle.trim() && !isCreating) {
+      setIsCreating(true);
+      try {
+        await onAddCard(column.id, newCardTitle.trim());
+        setNewCardTitle('');
+        setIsAddingCard(false);
+      } finally {
+        setIsCreating(false);
+      }
     }
   };
 
@@ -84,8 +90,13 @@ export function KanbanColumn({ column, onCardClick, onAddCard }: KanbanColumnPro
               autoFocus
             />
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleAddCard} className="add-card-btn">
-                Add Card
+              <Button 
+                size="sm" 
+                onClick={handleAddCard} 
+                disabled={isCreating}
+                className="add-card-btn"
+              >
+                {isCreating ? 'Adding...' : 'Add Card'}
               </Button>
               <Button
                 size="sm"
