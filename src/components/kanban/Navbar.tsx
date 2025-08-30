@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { BoardSettingsModal } from './BoardSettingsModal';
 import { ShareBoardModal } from './ShareBoardModal';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface NavbarProps {
   title: string;
@@ -71,6 +72,7 @@ export function Navbar({ title, board, onBoardUpdated }: NavbarProps) {
         </div>
         
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {board && (
             <>
               <Button variant="ghost" size="sm" onClick={() => setShowShare(true)}>
