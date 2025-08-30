@@ -78,7 +78,7 @@ export const CardChat = ({ cardId }: CardChatProps) => {
         .from('card_comments')
         .select(`
           *,
-          profiles (
+          profiles:user_id (
             display_name,
             avatar_url
           )
@@ -87,7 +87,7 @@ export const CardChat = ({ cardId }: CardChatProps) => {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setComments((data as Comment[]) || []);
+      setComments(data || []);
     } catch (error: any) {
       console.error('Failed to fetch comments:', error);
     } finally {

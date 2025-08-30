@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,12 +26,22 @@ export const CreateBoardDialog = ({ open, onOpenChange, onBoardCreated }: Create
   const [selectedColor, setSelectedColor] = useState(backgroundColors[0]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleCreate = async () => {
     if (!title.trim()) {
       toast({
         title: 'Error',
         description: 'Board title is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!user) {
+      toast({
+        title: 'Error',
+        description: 'You must be logged in to create a board',
         variant: 'destructive',
       });
       return;
@@ -44,6 +55,7 @@ export const CreateBoardDialog = ({ open, onOpenChange, onBoardCreated }: Create
           title: title.trim(),
           description: description.trim() || null,
           background_color: selectedColor,
+          user_id: user.id,
         })
         .select()
         .single();

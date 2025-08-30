@@ -55,7 +55,7 @@ export const BoardSettingsModal = ({
         .from('board_members')
         .select(`
           *,
-          profiles!board_members_user_id_fkey (
+          profiles:user_id (
             display_name,
             avatar_url
           )
@@ -117,7 +117,7 @@ export const BoardSettingsModal = ({
       // First, find the user by email
       const { data: userData, error: userError } = await supabase
         .from('profiles')
-        .select('user_id')
+        .select('id')
         .eq('display_name', memberEmail.trim())
         .single();
 
@@ -135,7 +135,7 @@ export const BoardSettingsModal = ({
         .from('board_members')
         .insert({
           board_id: board.id,
-          user_id: userData.user_id,
+          user_id: userData.id,
           role: 'member'
         });
 

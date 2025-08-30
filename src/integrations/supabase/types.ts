@@ -17,21 +17,21 @@ export type Database = {
       board_members: {
         Row: {
           board_id: string
-          created_at: string
+          created_at: string | null
           id: string
           role: string
           user_id: string
         }
         Insert: {
           board_id: string
-          created_at?: string
+          created_at?: string | null
           id?: string
           role?: string
           user_id: string
         }
         Update: {
           board_id?: string
-          created_at?: string
+          created_at?: string | null
           id?: string
           role?: string
           user_id?: string
@@ -44,38 +44,45 @@ export type Database = {
             referencedRelation: "boards"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "board_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       boards: {
         Row: {
-          background_color: string | null
-          created_at: string
+          background_color: string
+          created_at: string | null
           description: string | null
           id: string
-          is_favorite: boolean | null
+          is_favorite: boolean
           title: string
-          updated_at: string
-          user_id: string | null
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          background_color?: string | null
-          created_at?: string
+          background_color?: string
+          created_at?: string | null
           description?: string | null
           id?: string
-          is_favorite?: boolean | null
-          title: string
-          updated_at?: string
-          user_id?: string | null
+          is_favorite?: boolean
+          title?: string
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          background_color?: string | null
-          created_at?: string
+          background_color?: string
+          created_at?: string | null
           description?: string | null
           id?: string
-          is_favorite?: boolean | null
+          is_favorite?: boolean
           title?: string
-          updated_at?: string
-          user_id?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -83,25 +90,25 @@ export type Database = {
         Row: {
           card_id: string
           content: string
-          created_at: string
+          created_at: string | null
           id: string
-          updated_at: string
+          updated_at: string | null
           user_id: string
         }
         Insert: {
           card_id: string
           content: string
-          created_at?: string
+          created_at?: string | null
           id?: string
-          updated_at?: string
+          updated_at?: string | null
           user_id: string
         }
         Update: {
           card_id?: string
           content?: string
-          created_at?: string
+          created_at?: string | null
           id?: string
-          updated_at?: string
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -112,41 +119,45 @@ export type Database = {
             referencedRelation: "cards"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "card_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cards: {
         Row: {
-          created_at: string
+          created_at: string | null
           description: string | null
           due_date: string | null
           id: string
-          labels: string[] | null
-          list_id: string | null
+          list_id: string
           position: number
           title: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
-          labels?: string[] | null
-          list_id?: string | null
-          position?: number
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          due_date?: string | null
-          id?: string
-          labels?: string[] | null
-          list_id?: string | null
+          list_id: string
           position?: number
           title?: string
-          updated_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          list_id?: string
+          position?: number
+          title?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -158,30 +169,60 @@ export type Database = {
           },
         ]
       }
-      lists: {
+      columns: {
         Row: {
-          board_id: string | null
-          created_at: string
+          board_id: string
+          color: string
+          created_at: string | null
           id: string
           position: number
           title: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          board_id?: string | null
-          created_at?: string
-          id?: string
-          position?: number
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          board_id?: string | null
-          created_at?: string
+          board_id: string
+          color?: string
+          created_at?: string | null
           id?: string
           position?: number
           title?: string
-          updated_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          board_id?: string
+          color?: string
+          created_at?: string | null
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      lists: {
+        Row: {
+          board_id: string
+          created_at: string | null
+          id: string
+          position: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          board_id: string
+          created_at?: string | null
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Update: {
+          board_id?: string
+          created_at?: string | null
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -196,29 +237,76 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
-          created_at: string
+          created_at: string | null
           display_name: string | null
           id: string
-          updated_at: string
-          user_id: string
+          updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
-          created_at?: string
+          created_at?: string | null
           display_name?: string | null
-          id?: string
-          updated_at?: string
-          user_id: string
+          id: string
+          updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
-          created_at?: string
+          created_at?: string | null
           display_name?: string | null
           id?: string
-          updated_at?: string
-          user_id?: string
+          updated_at?: string | null
         }
         Relationships: []
+      }
+      tasks: {
+        Row: {
+          assignees: string[] | null
+          column_id: string
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          labels: string[] | null
+          position: number
+          priority: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assignees?: string[] | null
+          column_id: string
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          labels?: string[] | null
+          position?: number
+          priority?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Update: {
+          assignees?: string[] | null
+          column_id?: string
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          labels?: string[] | null
+          position?: number
+          priority?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_column_id_fkey"
+            columns: ["column_id"]
+            isOneToOne: false
+            referencedRelation: "columns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
