@@ -142,7 +142,7 @@ All colors MUST be HSL.
   .kanban-card {
     @apply bg-card border border-border rounded-lg shadow-card hover:shadow-card-hover;
     @apply transition-all duration-200 cursor-pointer;
-    background: var(--gradient-card);
+    /* background: var(--gradient-card); */
   }
 
   .kanban-column {

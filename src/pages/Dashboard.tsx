@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { CreateBoardDialog } from '@/components/boards/CreateBoardDialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface Board {
   id: string;
@@ -128,6 +129,7 @@ const Dashboard = () => {
             <Button variant="outline" onClick={signOut}>
               Sign Out
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </header>
